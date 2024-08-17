@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+            color: #909090;
+        }
+        .container {
+            text-align: center;
+            background-color: #000000;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #909090;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        #currentDate {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        #currentTime {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #focusTime {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6e57e4;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #000000;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Focus Timer</h1>
+        <div id="currentDate"></div>
+        <p>Current Time:</p>
+        <div id="currentTime"></div>
+        <p>Focus Time:</p>
+        <div id="focusTime">00:00:00</div>
+        <button id="toggleButton" onclick="toggleFocusTimer()">Stop Focus Timer</button>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            document.getElementById('currentDate').textContent = `Date: ${year}-${month}-${day}`;
+        }
+
+        let focusInterval;
+        let focusSeconds = 0;
+        let isRunning = true;
+
+        function startFocusTimer() {
+            focusInterval = setInterval(() => {
+                focusSeconds++;
+                const hours = String(Math.floor(focusSeconds / 3600)).padStart(2, '0');
+                const minutes = String(Math.floor((focusSeconds % 3600) / 60)).padStart(2, '0');
+                const seconds = String(focusSeconds % 60).padStart(2, '0');
+                document.getElementById('focusTime').textContent = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function stopFocusTimer() {
+            clearInterval(focusInterval);
+        }
+
+        function toggleFocusTimer() {
+            if (isRunning) {
+                stopFocusTimer();
+                document.getElementById('toggleButton').textContent = "Resume Focus Timer";
+            } else {
+                startFocusTimer();
+                document.getElementById('toggleButton').textContent = "Stop Focus Timer";
+            }
+            isRunning = !isRunning;
+        }
+
+        updateDate();
+        updateTime();
+        setInterval(updateTime, 1000);
+        startFocusTimer();
+    </script>
+</body>
+</html>
